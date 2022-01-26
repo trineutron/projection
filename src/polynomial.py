@@ -10,29 +10,49 @@ DEGREE = 2
 
 def dfdx(a, x, y):
     res = 0.0
-    for i, j in product(range(DEGREE), repeat=2):
-        res += a[2 * (i * DEGREE + j)] * (2*i+1) * x**(2*i) * y**(2*j)
+    for i in reversed(range(DEGREE)):
+        s = 0.0
+        for j in reversed(range(DEGREE)):
+            s *= y*y
+            s += a[2 * (i * DEGREE + j)]
+        res *= x*x
+        res += s * (2*i+1)
     return res
 
 
 def dfdy(a, x, y):
     res = 0.0
-    for i, j in product(range(DEGREE), range(1, DEGREE)):
-        res += a[2 * (i * DEGREE + j)] * (2*j) * x**(2*i+1) * y**(2*j-1)
-    return res
+    for i in reversed(range(DEGREE)):
+        s = 0.0
+        for j in reversed(range(1, DEGREE)):
+            s *= y*y
+            s += a[2 * (i * DEGREE + j)] * (2*j)
+        res *= x*x
+        res += s
+    return res * x * y
 
 
 def dgdx(a, x, y):
     res = 0.0
-    for i, j in product(range(1, DEGREE), range(DEGREE)):
-        res += a[2 * (i * DEGREE + j) + 1] * (2*i) * x**(2*i-1) * y**(2*j+1)
-    return res
+    for i in reversed(range(1, DEGREE)):
+        s = 0.0
+        for j in reversed(range(DEGREE)):
+            s *= y*y
+            s += a[2 * (i * DEGREE + j) + 1]
+        res *= x*x
+        res += s * (2*i)
+    return res * x * y
 
 
 def dgdy(a, x, y):
     res = 0.0
-    for i, j in product(range(DEGREE), repeat=2):
-        res += a[2 * (i * DEGREE + j) + 1] * (2*j+1) * x**(2*i) * y**(2*j)
+    for i in reversed(range(DEGREE)):
+        s = 0.0
+        for j in reversed(range(DEGREE)):
+            s *= y*y
+            s += a[2 * (i * DEGREE + j) + 1] * (2*j+1)
+        res *= x*x
+        res += s
     return res
 
 
