@@ -5,7 +5,7 @@ import numpy as np
 import scipy.optimize as optimize
 
 
-DEGREE = 2
+DEGREE = 3
 
 
 def dfdx(a, x, y):
