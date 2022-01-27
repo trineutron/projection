@@ -1,7 +1,6 @@
 import math
 from itertools import product
 
-import numpy as np
 import scipy.optimize as optimize
 
 
@@ -56,24 +55,28 @@ def dgdy(a, x, y):
     return res
 
 
-def calc_error(a):
+def calc_error(m):
     N = 100
     r2 = 0.0
     w = 0.0
     for i, j in product(range(2 * N), range(N)):
         x = (i + 0.5) / (2 * N) * math.pi
         y = (j + 0.5) / (2 * N) * math.pi
-        c = math.cos(y)
-        w += c
-        matrix = np.matrix([[dfdx(a, x, y) / c, dfdy(a, x, y)],
-                            [dgdx(a, x, y) / c, dgdy(a, x, y)]])
-        r2 += c * sum(np.log(np.linalg.eigvalsh(matrix.T*matrix))**2)
+        cs = math.cos(y)
+        w += cs
+        a = dfdx(m, x, y) / cs
+        b = dfdy(m, x, y)
+        c = dgdx(m, x, y) / cs
+        d = dgdy(m, x, y)
+        tr = a*a + b*b + c*c + d*d
+        det = (a*d - b*c) ** 2
+        x0 = (tr + (tr*tr - 4*det)**0.5) / 2
+        x1 = det / x0
+        r2 += cs * (math.log(x0)**2 + math.log(x1)**2)
     return r2 / w
 
 
-init = [7.44972894e-01,  9.56930892e-01, -7.59578774e-02,  2.25248316e-03,
-        3.00215844e-02, -3.76653854e-05,  6.89920614e-03, -3.28404823e-02,
-        -3.11994786e-03,  1.91051277e-02, -1.14904338e-02, -2.28201213e-03,
-        6.23910277e-05,  8.95306943e-03, -1.42209568e-03, -4.73080045e-03,
-        1.05498375e-03,  4.46535830e-04]
+init = [0] * (2*DEGREE*DEGREE)
+init[0] = 1
+init[1] = 1
 print(optimize.minimize(calc_error, init, method='Powell'))
