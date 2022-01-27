@@ -76,4 +76,4 @@ init = [7.44972894e-01,  9.56930892e-01, -7.59578774e-02,  2.25248316e-03,
         -3.11994786e-03,  1.91051277e-02, -1.14904338e-02, -2.28201213e-03,
         6.23910277e-05,  8.95306943e-03, -1.42209568e-03, -4.73080045e-03,
         1.05498375e-03,  4.46535830e-04]
-print(optimize.minimize(calc_error, init, method='Nelder-Mead'))
+print(optimize.minimize(calc_error, init, method='Powell'))
