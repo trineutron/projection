@@ -4,7 +4,7 @@ from itertools import product
 import scipy.optimize as optimize
 
 
-DEGREE = 3
+DEGREE = 4
 
 
 def dfdx(a, x, y):
@@ -79,4 +79,4 @@ def calc_error(m):
 init = [0] * (2*DEGREE*DEGREE)
 init[0] = 1
 init[1] = 1
-print(optimize.minimize(calc_error, init, method='Powell'))
+print(optimize.minimize(calc_error, init))
