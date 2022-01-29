@@ -4,7 +4,7 @@ import math
 from numba import jit
 from scipy import optimize
 
-DEGREE = 2
+DEGREE = 5
 N = 100
 
 
@@ -67,4 +67,4 @@ def calc_error(mat):
 init = [0] * (2*DEGREE*DEGREE)
 init[0] = 0.75
 init[1] = 1
-print(optimize.minimize(calc_error, init))
+print(optimize.minimize(calc_error, init, method='Powell'))
