@@ -15,9 +15,9 @@ def calc_error(mat):
     sum_weight = 0.0
     for idx_longitude in range(2 * N):
         for idx_latitude in range(N):
-            longitude = (idx_longitude + 0.5) / (2 * N) * math.pi
-            latitude = (idx_latitude + 0.5) / (2 * N) * math.pi
-            cos_lat = math.cos(latitude)
+            longitude = (idx_longitude + 0.5) / (2 * N)
+            latitude = (idx_latitude + 0.5) / (2 * N)
+            cos_lat = math.cos(latitude * math.pi)
             weight = cos_lat
             sum_weight += weight
 
@@ -67,4 +67,4 @@ def calc_error(mat):
 init = [0] * (2*DEGREE*DEGREE)
 init[0] = 0.75
 init[1] = 1
-print(optimize.minimize(calc_error, init, method='Powell'))
+print(optimize.minimize(calc_error, init))
