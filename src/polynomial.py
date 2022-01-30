@@ -4,8 +4,9 @@ import math
 from numba import jit
 from scipy import optimize
 
-DEGREE = 7
+DEGREE = 5
 N = 100
+WEIGHT_S = 0.5
 
 
 @jit
@@ -58,13 +59,14 @@ def calc_error(mat):
             dgdx *= longitude * latitude / cos_lat
 
             trace = (dfdx*dfdx + dfdy*dfdy + dgdx*dgdx + dgdy*dgdy) / 2
-            det = (dfdx*dgdy - dfdy*dgdx) ** 2
-            rate0 = trace + math.sqrt(trace*trace - det)
-            sum_error += weight * (math.log(rate0)**2 + math.log(det/rate0)**2)
+            det = max(dfdx*dgdy - dfdy*dgdx, 1e-100)
+            ratio = (trace + math.sqrt(trace*trace - det*det)) / det
+            sum_error += weight * (WEIGHT_S * math.log(det)**2
+                                   + (1.0 - WEIGHT_S) * math.log(ratio)**2)
     return sum_error / sum_weight
 
 
 init = [0] * (2*DEGREE*DEGREE)
-init[0] = 0.75
+init[0] = 1
 init[1] = 1
 print(optimize.minimize(calc_error, init))
