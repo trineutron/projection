@@ -4,7 +4,7 @@ import math
 from numba import jit
 from scipy import optimize
 
-DEGREE = 5
+DEGREE = 7
 N = 100
 
 
