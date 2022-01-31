@@ -62,15 +62,19 @@ def calc_error_point(mat, longitude, latitude):
 def calc_error(mat):
     """Calculate sum of strain."""
     sum_error = 0.0
-    for i in range(N):
-        x_i = 3 * (i + 0.5) / N
+    for i in range(N + 1):
+        x_i = 3 * i / N
         longitude = math.tanh(math.pi / 2 * math.sinh(x_i))
         weight_x = math.cosh(x_i) / math.cosh(math.pi/2 * math.sinh(x_i))**2
-        for j in range(N):
-            y_i = 3 * (j + 0.5) / N
+        if i == 0 or i == N:
+            weight_x /= 2
+        for j in range(N + 1):
+            y_i = 3 * j / N
             latitude = math.tanh(math.pi / 2 * math.sinh(y_i))
             weight_y = (math.cosh(y_i)
                         / math.cosh(math.pi/2 * math.sinh(y_i))**2)
+            if j == 0 or j == N:
+                weight_y /= 2
             sum_error += (weight_x * weight_y
                           * calc_error_point(mat, longitude, latitude))
     return sum_error * (3 / N)**2 * (math.pi / 2)**3
