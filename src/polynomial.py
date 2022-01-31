@@ -5,7 +5,7 @@ from numba import jit
 from scipy import optimize
 
 DEGREE = 5
-N = 100
+N = 20
 WEIGHT_S = 0.5
 
 
@@ -62,12 +62,18 @@ def calc_error_point(mat, longitude, latitude):
 def calc_error(mat):
     """Calculate sum of strain."""
     sum_error = 0.0
-    for idx_longitude in range(N):
-        longitude = (idx_longitude + 0.5) / N
-        for idx_latitude in range(N):
-            latitude = (idx_latitude + 0.5) / N
-            sum_error += calc_error_point(mat, longitude, latitude)
-    return sum_error / N**2 * math.pi / 2
+    for i in range(N):
+        x_i = 3 * (i + 0.5) / N
+        longitude = math.tanh(math.pi / 2 * math.sinh(x_i))
+        weight_x = math.cosh(x_i) / math.cosh(math.pi/2 * math.sinh(x_i))**2
+        for j in range(N):
+            y_i = 3 * (j + 0.5) / N
+            latitude = math.tanh(math.pi / 2 * math.sinh(y_i))
+            weight_y = (math.cosh(y_i)
+                        / math.cosh(math.pi/2 * math.sinh(y_i))**2)
+            sum_error += (weight_x * weight_y
+                          * calc_error_point(mat, longitude, latitude))
+    return sum_error * (3 / N)**2 * (math.pi / 2)**3
 
 
 init = [0] * (2*DEGREE*DEGREE)
